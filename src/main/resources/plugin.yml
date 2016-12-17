@@ -1,0 +1,3 @@
+name: Mcmsql
+version: ${project.version}
+main: com.morecommunityminecraft.mcmsql.Main
