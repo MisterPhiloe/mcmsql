@@ -15,12 +15,13 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        setupConfig();
         this.sql = new MySQL(dbKeys[0], dbKeys[1], dbKeys[2], dbKeys[3], dbKeys[4]);
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        getMySQL().closeConnection();
     }
 
     private void setupConfig() {
@@ -41,5 +42,9 @@ public final class Main extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public MySQL getMySQL() {
+        return this.sql;
     }
 }
