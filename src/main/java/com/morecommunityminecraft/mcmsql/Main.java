@@ -10,11 +10,17 @@ import java.util.List;
 
 public final class Main extends JavaPlugin {
 
+    private static Main main;
     private String[] dbKeys = new String[5];
     private MySQL sql = null;
 
+    public static Main getMain() {
+        return main;
+    }
+
     @Override
     public void onEnable() {
+        main = this;
         setupConfig();
         this.sql = new MySQL(dbKeys[0], dbKeys[1], dbKeys[2], dbKeys[3], dbKeys[4]);
     }
@@ -22,6 +28,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         getMySQL().closeConnection();
+        main = null;
     }
 
     private void setupConfig() {
