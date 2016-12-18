@@ -3,6 +3,11 @@ package com.morecommunityminecraft.mcmsql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class MySQL {
 
@@ -19,7 +24,69 @@ public class MySQL {
         this.ds = new HikariDataSource(config);
     }
 
-    public void getNewConnection() {
-
+    /**
+     * @return new connection
+     */
+    public Connection getConnection() {
+        try {
+            return ds.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
+    public void executeQuery(String query) {
+        BukkitRunnable br = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Connection conn = getConnection();
+                PreparedStatement ps = null;
+                try {
+                    ps = conn.prepareStatement(query);
+                    ps.executeQuery();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (ps != null) {
+                            ps.close();
+                        }
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        br.runTaskAsynchronously(Main.getMain());
+    }
+
+    public void executeUpdate(String query) {
+        BukkitRunnable br = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Connection conn = getConnection();
+                PreparedStatement ps = null;
+                try {
+                    ps = conn.prepareStatement(query);
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (ps != null) {
+                            ps.close();
+                        }
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        br.runTaskAsynchronously(Main.getMain());
+    }
+
 }
