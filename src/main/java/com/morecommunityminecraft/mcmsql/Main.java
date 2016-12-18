@@ -27,7 +27,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getMySQL().closeConnection();
         main = null;
     }
 
