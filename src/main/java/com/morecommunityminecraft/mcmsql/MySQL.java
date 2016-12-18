@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQL {
@@ -42,13 +43,17 @@ public class MySQL {
             public void run() {
                 Connection conn = getConnection();
                 PreparedStatement ps = null;
+                ResultSet rs = null;
                 try {
                     ps = conn.prepareStatement(query);
-                    ps.executeQuery();
+                    rs = ps.executeQuery();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
                     try {
+                        if (rs != null) {
+                            rs.close();
+                        }
                         if (ps != null) {
                             ps.close();
                         }
